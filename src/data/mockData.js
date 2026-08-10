@@ -209,3 +209,180 @@ export const mockMaintenanceLog = [
     notes: 'Routine hardware inspection. All components functional. RAM upgraded to 16GB.', status: 'Completed',
   },
 ];
+
+// ── Mock Users ───────────────────────────────────────────────────
+export const mockUsers = [
+  { id: 'u001', name: 'Alex Reyes',       initials: 'AR', email: 'alex.reyes@company.com',    role: 'Super Admin',            department: 'IT',          branch: 'cebu',   assetIds: ['ast-8293', 'ast-8294'], status: 'active' },
+  { id: 'u002', name: 'Maria Santos',     initials: 'MS', email: 'maria.santos@company.com',  role: 'Dept. Manager',          department: 'HR',          branch: 'cebu',   assetIds: ['ast-8291'],             status: 'active' },
+  { id: 'u003', name: 'Carlos Dela Cruz', initials: 'CD', email: 'carlos.dc@company.com',      role: 'Standard Employee',      department: 'Engineering', branch: 'cebu',   assetIds: ['ast-8292'],             status: 'active' },
+  { id: 'u004', name: 'Dana Reyes',       initials: 'DR', email: 'dana.reyes@company.com',    role: 'Finance / Procurement',  department: 'Finance',     branch: 'manila', assetIds: ['ast-8295'],             status: 'active' },
+  { id: 'u005', name: 'Rona Fuentes',     initials: 'RF', email: 'rona.fuentes@company.com',  role: 'Auditor / Inv. Clerk',   department: 'Design',      branch: 'manila', assetIds: ['ast-8296'],             status: 'active' },
+  { id: 'u006', name: 'Ben Cruz',         initials: 'BC', email: 'ben.cruz@company.com',      role: 'IT Admin / Technician',  department: 'IT',          branch: 'cebu',   assetIds: [],                       status: 'active' },
+  { id: 'u007', name: 'Joy Lim',          initials: 'JL', email: 'joy.lim@company.com',       role: 'Standard Employee',      department: 'Marketing',   branch: 'manila', assetIds: [],                       status: 'inactive' },
+  { id: 'u008', name: 'Raf Mendoza',      initials: 'RM', email: 'raf.mendoza@company.com',   role: 'Dept. Manager',          department: 'Operations',  branch: 'davao',  assetIds: [],                       status: 'active' },
+];
+
+// ── Mock Locations (4-level hierarchy) ──────────────────────────
+export const mockLocations = [
+  {
+    id: 'org-001', name: 'IT IMS Co.', type: 'organization', assetCount: 1284,
+    children: [
+      {
+        id: 'br-001', name: 'Cebu HQ', type: 'branch', assetCount: 834,
+        children: [
+          {
+            id: 'bld-001', name: 'Building A', type: 'building', assetCount: 512,
+            children: [
+              {
+                id: 'fl-001', name: 'Floor 1', type: 'floor', assetCount: 248,
+                children: [
+                  { id: 'rm-001', name: 'Server Room',    type: 'room', assetCount: 18 },
+                  { id: 'rm-002', name: 'Room 101',       type: 'room', assetCount: 24 },
+                  { id: 'rm-003', name: 'Reception',      type: 'room', assetCount: 8  },
+                  { id: 'rm-004', name: 'Storage Room A', type: 'room', assetCount: 31 },
+                ],
+              },
+              {
+                id: 'fl-002', name: 'Floor 2', type: 'floor', assetCount: 264,
+                children: [
+                  { id: 'rm-005', name: 'Room 201',   type: 'room', assetCount: 32 },
+                  { id: 'rm-006', name: 'Room 204',   type: 'room', assetCount: 28 },
+                  { id: 'rm-007', name: 'HR Office',  type: 'room', assetCount: 20 },
+                  { id: 'rm-008', name: 'IT Office',  type: 'room', assetCount: 15 },
+                ],
+              },
+            ],
+          },
+          {
+            id: 'bld-002', name: 'Building B', type: 'building', assetCount: 322,
+            children: [
+              {
+                id: 'fl-003', name: 'Floor 1', type: 'floor', assetCount: 160,
+                children: [
+                  { id: 'rm-009', name: 'Finance Dept.', type: 'room', assetCount: 45 },
+                  { id: 'rm-010', name: 'Operations',    type: 'room', assetCount: 38 },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'br-002', name: 'Manila Office', type: 'branch', assetCount: 326,
+        children: [
+          {
+            id: 'bld-003', name: 'Tower 1', type: 'building', assetCount: 326,
+            children: [
+              {
+                id: 'fl-004', name: 'Floor 2', type: 'floor', assetCount: 180,
+                children: [
+                  { id: 'rm-011', name: 'Design Studio',    type: 'room', assetCount: 22 },
+                  { id: 'rm-012', name: 'Engineering Lab',  type: 'room', assetCount: 18 },
+                  { id: 'rm-013', name: 'IT Office Manila', type: 'room', assetCount: 12 },
+                ],
+              },
+              {
+                id: 'fl-005', name: 'Floor 3', type: 'floor', assetCount: 146,
+                children: [
+                  { id: 'rm-014', name: 'Executive Suite', type: 'room', assetCount: 14 },
+                  { id: 'rm-015', name: 'Meeting Room A',  type: 'room', assetCount: 8  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'br-003', name: 'Davao Branch', type: 'branch', assetCount: 124,
+        children: [
+          {
+            id: 'bld-004', name: 'Davao Office', type: 'building', assetCount: 124,
+            children: [
+              {
+                id: 'fl-006', name: 'Ground Floor', type: 'floor', assetCount: 124,
+                children: [
+                  { id: 'rm-016', name: 'Main Office',  type: 'room', assetCount: 80 },
+                  { id: 'rm-017', name: 'Storage Room', type: 'room', assetCount: 44 },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+];
+
+// ── Mock Software Licenses ────────────────────────────────────────
+export const mockLicenses = {
+  perSeat: [
+    {
+      id: 'lic-001', name: 'Microsoft 365 Business Premium', vendor: 'Microsoft',
+      totalSeats: 50, allocatedSeats: 47, expiry: '2027-01-15',
+      costPerSeat: 950, annualTotal: 47500, poNumber: 'PO-2024-0091',
+      status: 'active',
+      users: ['u001','u002','u003','u004','u005','u006'],
+    },
+    {
+      id: 'lic-002', name: 'Adobe Creative Cloud (All Apps)', vendor: 'Adobe',
+      totalSeats: 15, allocatedSeats: 12, expiry: '2026-08-30',
+      costPerSeat: 3500, annualTotal: 52500, poNumber: 'PO-2025-0012',
+      status: 'expiring',
+      users: ['u005'],
+    },
+    {
+      id: 'lic-003', name: 'Zoom Workplace Pro', vendor: 'Zoom',
+      totalSeats: 100, allocatedSeats: 83, expiry: '2026-12-31',
+      costPerSeat: 650, annualTotal: 65000, poNumber: 'PO-2024-0055',
+      status: 'active',
+      users: [],
+    },
+    {
+      id: 'lic-004', name: 'Figma Organization', vendor: 'Figma',
+      totalSeats: 10, allocatedSeats: 10, expiry: '2027-03-10',
+      costPerSeat: 1800, annualTotal: 18000, poNumber: 'PO-2025-0033',
+      status: 'full',
+      users: ['u005'],
+    },
+  ],
+  concurrent: [
+    {
+      id: 'lic-005', name: 'AutoCAD LT 2024', vendor: 'Autodesk',
+      maxConcurrent: 10, activeSessions: 3, expiry: '2026-11-30',
+      annualCost: 85000, poNumber: 'PO-2024-0038', status: 'active',
+      sessions: [
+        { user: 'Carlos Dela Cruz', workstation: 'WKSTN-012', since: '09:14 AM' },
+        { user: 'Raf Mendoza',      workstation: 'WKSTN-031', since: '10:02 AM' },
+        { user: 'Joy Lim',          workstation: 'WKSTN-008', since: '10:45 AM' },
+      ],
+    },
+    {
+      id: 'lic-006', name: 'MATLAB R2024a', vendor: 'MathWorks',
+      maxConcurrent: 5, activeSessions: 1, expiry: '2026-09-15',
+      annualCost: 95000, poNumber: 'PO-2024-0041', status: 'expiring',
+      sessions: [
+        { user: 'Carlos Dela Cruz', workstation: 'WKSTN-012', since: '11:30 AM' },
+      ],
+    },
+  ],
+  siteWide: [
+    {
+      id: 'lic-007', name: 'Windows Server 2022 Datacenter', vendor: 'Microsoft',
+      renewalDate: '2027-03-01', annualCost: 185000, poNumber: 'PO-2023-0005',
+      status: 'active', coverage: 'Unlimited VMs on 2 physical servers',
+      contractDoc: 'WS2022-contract.pdf',
+    },
+    {
+      id: 'lic-008', name: 'VMware vSphere 8 Enterprise Plus', vendor: 'Broadcom',
+      renewalDate: '2026-10-15', annualCost: 320000, poNumber: 'PO-2023-0008',
+      status: 'expiring', coverage: '3 hosts, unlimited VMs',
+      contractDoc: 'vmware-vsphere-contract.pdf',
+    },
+    {
+      id: 'lic-009', name: 'Cloudflare Zero Trust', vendor: 'Cloudflare',
+      renewalDate: '2027-06-01', annualCost: 42000, poNumber: 'PO-2025-0019',
+      status: 'active', coverage: 'Organization-wide, unlimited users',
+      contractDoc: 'cloudflare-zt-contract.pdf',
+    },
+  ],
+};
