@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { mockAssets, mockWorkOrders, mockMaintenanceLog } from '../data/mockData';
+import { mockAssets, mockWorkOrders, mockMaintenanceLog, mockRequisitions } from '../data/mockData';
 
 // ── Branch options ──────────────────────────────────────────────
 export const BRANCHES = [
@@ -16,6 +16,16 @@ export const ROLES = {
   DEPT_MANAGER: 'Dept. Manager',
   FINANCE:      'Finance / Procurement',
   EMPLOYEE:     'Standard Employee',
+};
+
+// ── RBAC Permissions ────────────────────────────────────────────
+export const PERMISSIONS = {
+  CAN_ADD_ASSET:      [ROLES.SUPER_ADMIN, ROLES.IT_ADMIN, ROLES.FINANCE],
+  CAN_DELETE_ASSET:   [ROLES.SUPER_ADMIN, ROLES.IT_ADMIN],
+  CAN_MANAGE_USERS:   [ROLES.SUPER_ADMIN],
+  CAN_APPROVE_PO:     [ROLES.SUPER_ADMIN, ROLES.FINANCE, ROLES.DEPT_MANAGER],
+  CAN_VIEW_SETTINGS:  [ROLES.SUPER_ADMIN, ROLES.IT_ADMIN, ROLES.FINANCE],
+  CAN_VIEW_REPORTS:   [ROLES.SUPER_ADMIN, ROLES.IT_ADMIN, ROLES.FINANCE, ROLES.AUDITOR, ROLES.DEPT_MANAGER],
 };
 
 const MOCK_USER = {
@@ -58,6 +68,12 @@ const useStore = create((set, get) => ({
 
   // ── Auth ─────────────────────────────────────────────────────
   currentUser: MOCK_USER,
+  setCurrentUser: (user) => set({ currentUser: user }),
+  
+  hasPermission: (permissionGroup) => {
+    const { currentUser } = get();
+    return permissionGroup.includes(currentUser.role);
+  },
 
   // ── Notifications ─────────────────────────────────────────────
   notificationCount: 5,
@@ -93,6 +109,23 @@ const useStore = create((set, get) => ({
     });
   },
 
+  // ── Audit Trail ──────────────────────────────────────────────
+  auditLog: [],
+  addAuditLog: (action, entity, entityId, details) => {
+    const { currentUser } = get();
+    const newLog = {
+      id: `audit-${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      actor: currentUser.name,
+      role: currentUser.role,
+      action,
+      entity,
+      entityId,
+      details
+    };
+    set(s => ({ auditLog: [newLog, ...s.auditLog] }));
+  },
+
   // ── Assets (live store, initialized from mock) ───────────────
   assets: [...mockAssets],
 
@@ -104,6 +137,7 @@ const useStore = create((set, get) => ({
       lastUpdated: new Date().toISOString().split('T')[0],
     };
     set(s => ({ assets: [newAsset, ...s.assets] }));
+    get().addAuditLog('Created', 'Asset', newAsset.id, `Added asset ${newAsset.name}`);
     return newAsset;
   },
 
@@ -124,6 +158,7 @@ const useStore = create((set, get) => ({
         : a
       ),
     }));
+    get().addAuditLog('Updated', 'Asset', id, `Updated asset properties`);
   },
 
   // ── Maintenance & Work Orders ────────────────────────────────
@@ -165,7 +200,19 @@ const useStore = create((set, get) => ({
     set(s => ({
       workOrders: s.workOrders.map(w => w.id === id ? { ...w, ...updates } : w)
     }));
+    get().addAuditLog('Updated', 'Work Order', id, `Changed work order status`);
   },
+
+  // ── Procurement ──────────────────────────────────────────────
+  requisitions: [...mockRequisitions],
+  loadRequisitions: (reqs) => set({ requisitions: reqs }),
+  updateRequisition: (id, updates) => {
+    set(s => ({
+      requisitions: s.requisitions.map(r => r.id === id ? { ...r, ...updates } : r)
+    }));
+    get().addAuditLog('Updated', 'Requisition', id, `Updated PO status`);
+  },
+
   // ── Draft Asset (in-progress form) ──────────────────────────
   draftAsset: null,
   setDraftAsset: (data) => {
