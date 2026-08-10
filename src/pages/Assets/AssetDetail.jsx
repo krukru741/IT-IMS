@@ -3,11 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { mockAssets, mockAssignmentHistory, mockMaintenanceLog } from '../../data/mockData';
 import { StatusBadge } from '../../components/ui/Badge';
 import Avatar from '../../components/ui/Avatar';
+import QrPrintModal from '../../components/ui/QrPrintModal';
 import {
   ArrowLeft, Edit, UserCheck, QrCode, AlertTriangle, MoreHorizontal,
   MapPin, Tag, Calendar, DollarSign, Cpu,
   Wrench, FileText, Info,
 } from 'lucide-react';
+
 
 const TABS = [
   { id: 'overview',    label: 'Overview',           icon: Info },
@@ -234,6 +236,7 @@ export default function AssetDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
+  const [printAsset, setPrintAsset] = useState(null);
 
   const asset = mockAssets.find(a => a.id === id);
 
@@ -310,7 +313,7 @@ export default function AssetDetail() {
           <button className="btn btn-secondary btn-sm" id="assign-asset-btn" aria-label="Assign asset">
             <UserCheck size={14} /> Assign
           </button>
-          <button className="btn btn-secondary btn-sm" id="print-qr-btn" aria-label="Print QR label">
+          <button className="btn btn-secondary btn-sm" id="print-qr-btn" aria-label="Print QR label" onClick={() => setPrintAsset(asset)}>
             <QrCode size={14} /> Print QR
           </button>
           <button className="btn btn-danger btn-sm" id="report-issue-btn" aria-label="Report issue">
