@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { mockAssets } from '../data/mockData';
+import { mockAssets, mockWorkOrders, mockMaintenanceLog } from '../data/mockData';
 
 // ── Branch options ──────────────────────────────────────────────
 export const BRANCHES = [
@@ -65,6 +65,33 @@ const useStore = create((set, get) => ({
 
   // ── Sync ─────────────────────────────────────────────────────
   syncStatus: 'synced',
+  setSyncStatus: (status) => set({ syncStatus: status }),
+
+  offlineQueue: [],
+  addOfflineScan: (scanData) => {
+    set(s => ({
+      offlineQueue: [...s.offlineQueue, { ...scanData, timestamp: Date.now() }],
+      syncStatus: 'offline'
+    }));
+  },
+  flushOfflineQueue: () => {
+    // Process the offlineQueue (e.g. updating assets to 'ACTIVE')
+    set(s => {
+      const updatedAssets = [...s.assets];
+      s.offlineQueue.forEach(scan => {
+        const a = updatedAssets.find(x => x.tag === scan.tag);
+        if (a) {
+          a.status = 'ACTIVE';
+          a.lastUpdated = new Date().toISOString().split('T')[0];
+        }
+      });
+      return {
+        assets: updatedAssets,
+        offlineQueue: [],
+        syncStatus: 'synced'
+      };
+    });
+  },
 
   // ── Assets (live store, initialized from mock) ───────────────
   assets: [...mockAssets],
@@ -80,6 +107,16 @@ const useStore = create((set, get) => ({
     return newAsset;
   },
 
+  importAssets: (newAssets) => {
+    const formatted = newAssets.map((a, i) => ({
+      ...a,
+      id: `ast-imp-${Date.now()}-${i}`,
+      lastUpdated: new Date().toISOString().split('T')[0],
+      status: a.status || 'ACTIVE',
+    }));
+    set(s => ({ assets: [...formatted, ...s.assets] }));
+  },
+
   updateAsset: (id, updates) => {
     set(s => ({
       assets: s.assets.map(a => a.id === id
@@ -89,6 +126,46 @@ const useStore = create((set, get) => ({
     }));
   },
 
+  // ── Maintenance & Work Orders ────────────────────────────────
+  workOrders: [...mockWorkOrders],
+  maintenanceLogs: [...mockMaintenanceLog],
+  
+  completeWorkOrder: (id, logNotes) => {
+    set(s => {
+      const wo = s.workOrders.find(w => w.id === id);
+      if (!wo) return s;
+
+      const updatedWOs = s.workOrders.map(w =>
+        w.id === id ? { ...w, status: 'Completed' } : w
+      );
+
+      const newLog = {
+        id: `ml-${Date.now()}`,
+        assetId: wo.assetId,
+        date: new Date().toISOString().split('T')[0],
+        type: wo.title,
+        tech: wo.assignedTo,
+        notes: logNotes,
+        status: 'Completed',
+      };
+
+      const updatedAssets = s.assets.map(a =>
+        a.id === wo.assetId ? { ...a, lastUpdated: new Date().toISOString().split('T')[0] } : a
+      );
+
+      return {
+        workOrders: updatedWOs,
+        maintenanceLogs: [newLog, ...s.maintenanceLogs],
+        assets: updatedAssets,
+      };
+    });
+  },
+
+  updateWorkOrder: (id, updates) => {
+    set(s => ({
+      workOrders: s.workOrders.map(w => w.id === id ? { ...w, ...updates } : w)
+    }));
+  },
   // ── Draft Asset (in-progress form) ──────────────────────────
   draftAsset: null,
   setDraftAsset: (data) => {

@@ -7,9 +7,12 @@ import Dashboard from './pages/Dashboard';
 import AssetList from './pages/Assets/AssetList';
 import AssetDetail from './pages/Assets/AssetDetail';
 import AssetForm from './pages/Assets/AssetForm';
+import ImportWizard from './pages/Assets/ImportWizard';
 import UserList from './pages/Users/UserList';
 import LocationManager from './pages/Locations/LocationManager';
 import LicenseList from './pages/Licenses/LicenseList';
+import MaintenanceList from './pages/Maintenance/MaintenanceList';
+import ReportDashboard from './pages/Reports/ReportDashboard';
 
 // Placeholder for Phase 3+ modules
 const Placeholder = ({ title }) => (
@@ -47,6 +50,7 @@ export default function App() {
         <Route path="/"            element={<Layout><Dashboard /></Layout>} />
         <Route path="/assets"      element={<Layout><AssetList /></Layout>} />
         <Route path="/assets/new"  element={<Layout><AssetForm /></Layout>} />
+        <Route path="/assets/import" element={<Layout><ImportWizard /></Layout>} />
         <Route path="/assets/:id"  element={<Layout><AssetDetail /></Layout>} />
         <Route path="/assets/:id/edit" element={<Layout><AssetForm /></Layout>} />
 
@@ -55,9 +59,11 @@ export default function App() {
         <Route path="/locations"   element={<Layout><LocationManager /></Layout>} />
         <Route path="/licenses"    element={<Layout><LicenseList /></Layout>} />
 
+        {/* Phase 3 ── */}
+        <Route path="/maintenance" element={<Layout><MaintenanceList /></Layout>} />
+        <Route path="/reports"     element={<Layout><ReportDashboard /></Layout>} />
+
         {/* Phase 3+ placeholders ── */}
-        <Route path="/maintenance" element={<Layout><Placeholder title="Maintenance" /></Layout>} />
-        <Route path="/reports"     element={<Layout><Placeholder title="Reports & Analytics" /></Layout>} />
         <Route path="/procurement" element={<Layout><Placeholder title="Procurement" /></Layout>} />
         <Route path="/settings"    element={<Layout><Placeholder title="Settings" /></Layout>} />
         <Route path="/notifications" element={<Layout><Placeholder title="Notifications" /></Layout>} />

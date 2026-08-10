@@ -386,3 +386,46 @@ export const mockLicenses = {
     },
   ],
 };
+
+// ── Mock Work Orders ─────────────────────────────────────────────
+export const mockWorkOrders = [
+  {
+    id: 'wo-101',
+    assetId: 'ast-8292',
+    assetName: 'HP EliteBook 840 G9',
+    title: 'Screen flickering issue',
+    description: 'User reports screen flickers intermittently when connected to external monitor.',
+    status: 'Scheduled', // 'Scheduled', 'In Progress', 'Completed', 'Escalated'
+    priority: 'High',
+    reportedBy: 'Carlos Dela Cruz',
+    assignedTo: 'IT Tech Support',
+    dateReported: '2026-08-01',
+    dueDate: '2026-08-12',
+  },
+  {
+    id: 'wo-102',
+    assetId: 'ast-8293',
+    assetName: 'Cisco Catalyst 2960',
+    title: 'Firmware Update',
+    description: 'Scheduled firmware patch to v15.2(7)E4',
+    status: 'In Progress',
+    priority: 'Medium',
+    reportedBy: 'System',
+    assignedTo: 'Network Admin',
+    dateReported: '2026-08-09',
+    dueDate: '2026-08-15',
+  },
+  {
+    id: 'wo-103',
+    assetId: 'ast-8291',
+    assetName: 'Dell Latitude 5530',
+    title: 'Battery Replacement',
+    description: 'Battery health at 60%, needs replacement.',
+    status: 'Escalated',
+    priority: 'High',
+    reportedBy: 'Maria Santos',
+    assignedTo: 'Hardware Team',
+    dateReported: '2026-07-28',
+    dueDate: '2026-08-05',
+  }
+];

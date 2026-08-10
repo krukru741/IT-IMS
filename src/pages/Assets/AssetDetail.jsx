@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { mockAssets, mockAssignmentHistory, mockMaintenanceLog } from '../../data/mockData';
+import { mockAssignmentHistory } from '../../data/mockData';
+import useStore from '../../store/useStore';
 import { StatusBadge } from '../../components/ui/Badge';
 import Avatar from '../../components/ui/Avatar';
 import QrPrintModal from '../../components/ui/QrPrintModal';
@@ -164,10 +165,13 @@ function AssignmentsTab() {
 }
 
 // ── Maintenance Log Tab ────────────────────────────────────────
-function MaintenanceTab() {
+function MaintenanceTab({ asset }) {
+  const { maintenanceLogs } = useStore();
+  const logs = maintenanceLogs.filter(l => l.assetId === asset.id || (!l.assetId && (l.asset === asset.name || true)));
+
   return (
     <div className="maintenance-timeline">
-      {mockMaintenanceLog.map(log => (
+      {logs.map(log => (
         <div className="maintenance-entry" key={log.id}>
           <div style={{
             width: 36, height: 36, borderRadius: 'var(--radius-md)',
@@ -238,7 +242,9 @@ export default function AssetDetail() {
   const [activeTab, setActiveTab] = useState('overview');
   const [printAsset, setPrintAsset] = useState(null);
 
-  const asset = mockAssets.find(a => a.id === id);
+  const { assets } = useStore();
+  const asset = assets.find(a => a.id === id);
+
 
   if (!asset) {
     return (
@@ -356,7 +362,7 @@ export default function AssetDetail() {
       >
         {activeTab === 'overview'    && <OverviewTab asset={asset} />}
         {activeTab === 'assignments' && <AssignmentsTab />}
-        {activeTab === 'maintenance' && <MaintenanceTab />}
+        {activeTab === 'maintenance' && <MaintenanceTab asset={asset} />}
         {activeTab === 'documents'   && <DocumentsTab />}
       </div>
       

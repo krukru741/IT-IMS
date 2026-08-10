@@ -99,13 +99,13 @@ export default function AssetList() {
           <p className="page-subtitle">{filtered.length} assets found</p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn btn-secondary btn-sm" id="import-csv-btn">
+          <button className="btn btn-secondary btn-sm" id="import-csv-btn" onClick={() => navigate('/assets/import')}>
             <Upload size={14} /> Import
           </button>
           <button className="btn btn-secondary btn-sm" id="export-csv-btn">
             <Download size={14} /> Export
           </button>
-          <button className="btn btn-primary btn-sm" id="add-asset-list-btn">
+          <button className="btn btn-primary btn-sm" id="add-asset-list-btn" onClick={() => navigate('/assets/new')}>
             <Plus size={14} /> Add Asset
           </button>
         </div>
