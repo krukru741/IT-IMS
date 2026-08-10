@@ -1,6 +1,7 @@
 import React from 'react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
+import SyncManager from './SyncManager';
 import useStore from '../../store/useStore';
 
 export default function Layout({ children }) {
@@ -15,6 +16,7 @@ export default function Layout({ children }) {
           {children}
         </main>
       </div>
+      <SyncManager />
     </div>
   );
 }

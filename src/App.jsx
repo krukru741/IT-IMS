@@ -13,6 +13,7 @@ import LocationManager from './pages/Locations/LocationManager';
 import LicenseList from './pages/Licenses/LicenseList';
 import MaintenanceList from './pages/Maintenance/MaintenanceList';
 import ReportDashboard from './pages/Reports/ReportDashboard';
+import SyncManager from './components/layout/SyncManager';
 
 // Placeholder for Phase 3+ modules
 const Placeholder = ({ title }) => (

@@ -18,6 +18,14 @@ export default function Navbar() {
   const handleScan = (url) => {
     // Extract asset ID from scanned URL and navigate
     const match = url.match(/\/ast\/([^/?]+)/);
+    const tag = match ? match[1] : url; // simplified for offline scan demonstration
+    
+    if (!navigator.onLine) {
+      useStore.getState().addOfflineScan({ tag, url });
+      alert('Offline: Scan queued for sync.');
+      return;
+    }
+
     if (match) navigate(`/assets/${match[1]}`);
     else navigate(`/assets?scan=${encodeURIComponent(url)}`);
   };
