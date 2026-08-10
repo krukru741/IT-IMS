@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useStore, { BRANCHES } from '../../store/useStore';
-import { Search, Sun, Moon, Bell, MapPin, Wifi, WifiOff, RefreshCw } from 'lucide-react';
+import { Search, Sun, Moon, Bell, MapPin, Wifi, WifiOff, RefreshCw, ScanLine, Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import QrScanner from '../ui/QrScanner';
 
 export default function Navbar() {
+  const navigate = useNavigate();
+  const [scannerOpen, setScannerOpen] = useState(false);
   const {
     theme, toggleTheme,
     activeBranch, setActiveBranch,
@@ -10,6 +14,13 @@ export default function Navbar() {
     syncStatus,
     currentUser,
   } = useStore();
+
+  const handleScan = (url) => {
+    // Extract asset ID from scanned URL and navigate
+    const match = url.match(/\/ast\/([^/?]+)/);
+    if (match) navigate(`/assets/${match[1]}`);
+    else navigate(`/assets?scan=${encodeURIComponent(url)}`);
+  };
 
   const SyncIcon = () => {
     if (syncStatus === 'synced')  return <Wifi size={16} style={{ color: 'var(--status-active)' }} />;
@@ -19,7 +30,7 @@ export default function Navbar() {
 
   const syncLabel = { synced: 'Synced', pending: 'Syncing…', error: 'Sync Failed' }[syncStatus];
 
-  return (
+  return (<>
     <header className="navbar" role="banner">
       {/* ── Left ─────────────────────────────────────────────── */}
       <div className="navbar-left">
@@ -77,6 +88,27 @@ export default function Navbar() {
           }
         </button>
 
+        {/* QR Scanner button */}
+        <button
+          id="scan-qr-navbar-btn"
+          className="btn btn-ghost btn-icon"
+          onClick={() => setScannerOpen(true)}
+          title="Scan QR Code"
+          aria-label="Open QR scanner"
+        >
+          <ScanLine size={18} />
+        </button>
+
+        {/* Add Asset shortcut */}
+        <button
+          id="quick-add-asset-btn"
+          className="btn btn-primary btn-sm"
+          onClick={() => navigate('/assets/new')}
+          aria-label="Add new asset"
+        >
+          <Plus size={14} /> Add Asset
+        </button>
+
         {/* Notifications */}
         <button
           id="notifications-btn"
@@ -106,5 +138,12 @@ export default function Navbar() {
         </div>
       </div>
     </header>
-  );
+
+    {/* QR Scanner modal */}
+    <QrScanner
+      isOpen={scannerOpen}
+      onClose={() => setScannerOpen(false)}
+      onScan={handleScan}
+    />
+  </>);
 }
