@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import {
   step1Schema, step2Schema, step3Schema, step4Schema, step5Schema,
-  getSpecTemplate, DEPARTMENTS, CATEGORIES,
+  getSpecTemplate, DEPARTMENTS,
 } from '../../schemas/assetSchema';
 import StepWizard from '../../components/ui/StepWizard';
 import useStore, { BRANCHES, generateAssetTag } from '../../store/useStore';

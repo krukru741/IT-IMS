@@ -359,6 +359,9 @@ export default function AssetDetail() {
         {activeTab === 'maintenance' && <MaintenanceTab />}
         {activeTab === 'documents'   && <DocumentsTab />}
       </div>
+      
+      {/* QR Print Modal */}
+      <QrPrintModal asset={printAsset} onClose={() => setPrintAsset(null)} />
     </div>
   );
 }

@@ -66,6 +66,8 @@ export const SPEC_TEMPLATES = {
 export const getSpecTemplate = (category) =>
   SPEC_TEMPLATES[category] || SPEC_TEMPLATES['default'];
 
+export const CATEGORIES = Object.keys(SPEC_TEMPLATES).filter(k => k !== 'default');
+
 // ── Departments List ──────────────────────────────────────────
 export const DEPARTMENTS = [
   'IT', 'HR', 'Finance', 'Engineering', 'Design',
