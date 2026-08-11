@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import Modal from './Modal';
 import { Printer, Download, X } from 'lucide-react';
@@ -7,8 +7,16 @@ const LABEL_SCALE = 3.8; // 2"×1" at 96dpi = 192×96px → scaled for screen pr
 const LABEL_W = 192 * LABEL_SCALE;
 const LABEL_H = 96  * LABEL_SCALE;
 
+const LAYOUTS = [
+  { key: 1,  label: 'Single',   cols: 1 },
+  { key: 8,  label: '8-Up',     cols: 2 },
+  { key: 16, label: '16-Up',    cols: 4 },
+  { key: 30, label: '30-Up',    cols: 3 },
+];
+
 export default function QrPrintModal({ asset, onClose }) {
   const labelRef = useRef(null);
+  const [layout, setLayout] = useState(1);
   if (!asset) return null;
 
   const assetUrl  = `https://ims.company.com/ast/${asset.id}`;
@@ -29,9 +37,14 @@ export default function QrPrintModal({ asset, onClose }) {
         <div style={{ padding: '20px 24px 24px' }}>
           {/* Sheet options */}
           <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-            {['Single Label', '8-Up Sheet', '16-Up Sheet', '30-Up Sheet'].map(opt => (
-              <button key={opt} className="btn btn-secondary btn-sm" style={{ fontSize: 12 }}>
-                {opt}
+            {LAYOUTS.map(opt => (
+              <button 
+                key={opt.key} 
+                className={`btn btn-sm ${layout === opt.key ? 'btn-primary' : 'btn-secondary'}`}
+                style={{ fontSize: 12 }}
+                onClick={() => setLayout(opt.key)}
+              >
+                {opt.label}
               </button>
             ))}
           </div>
@@ -139,24 +152,37 @@ export default function QrPrintModal({ asset, onClose }) {
         }
       `}</style>
 
-      {/* Hidden print target — injected outside modal */}
+      {/* Hidden print target — grid of labels based on selected layout */}
       <div id="qr-label-print-target" style={{ display: 'none' }}>
-        <div style={{
-          width: '2in', height: '1in',
-          background: '#fff',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '4mm',
-          padding: '2mm 3mm',
-          pageBreakAfter: 'avoid',
-        }}>
-          <QRCodeSVG value={assetUrl} size={80} level="H" includeMargin={false} fgColor="#000" />
-          <div>
-            <div style={{ fontFamily: 'monospace', fontSize: '8pt', fontWeight: 700 }}>{asset.tag}</div>
-            <div style={{ fontSize: '7pt', fontWeight: 600 }}>{asset.name}</div>
-            <div style={{ fontSize: '6pt', color: '#555' }}>{asset.category}</div>
-            <div style={{ fontSize: '5pt', color: '#888', textTransform: 'uppercase' }}>{orgName}</div>
-          </div>
+        <div
+          className={`qr-print-grid layout-${layout}`}
+          style={{
+            display: 'grid',
+            gridTemplateColumns: `repeat(${LAYOUTS.find(l => l.key === layout)?.cols || 1}, 1fr)`,
+            gap: '4px',
+            padding: '4mm',
+          }}
+        >
+          {Array.from({ length: layout }).map((_, i) => (
+            <div key={i} style={{
+              width: '2in', height: '1in',
+              background: '#fff',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4mm',
+              padding: '2mm 3mm',
+              border: '0.5px solid #ccc',
+              pageBreakInside: 'avoid',
+            }}>
+              <QRCodeSVG value={assetUrl} size={layout === 1 ? 80 : 48} level="H" includeMargin={false} fgColor="#000" />
+              <div>
+                <div style={{ fontFamily: 'monospace', fontSize: layout === 1 ? '8pt' : '6pt', fontWeight: 700 }}>{asset.tag}</div>
+                <div style={{ fontSize: layout === 1 ? '7pt' : '5pt', fontWeight: 600 }}>{asset.name}</div>
+                <div style={{ fontSize: layout === 1 ? '6pt' : '5pt', color: '#555' }}>{asset.category}</div>
+                <div style={{ fontSize: '5pt', color: '#888', textTransform: 'uppercase' }}>{orgName}</div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </>

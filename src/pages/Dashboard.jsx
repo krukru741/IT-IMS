@@ -64,6 +64,8 @@ export default function Dashboard() {
       color: 'blue',
       trend: 'up',
       trendLabel: '+24 this month',
+      sparkData: [1180, 1195, 1210, 1224, 1240, 1262, 1284],
+      sparkColor: '#3B82F6',
     },
     {
       icon: UserCheck,
@@ -72,6 +74,8 @@ export default function Dashboard() {
       color: 'green',
       trend: 'up',
       trendLabel: '84% utilization',
+      sparkData: [790, 805, 820, 831, 840, 843, 847],
+      sparkColor: '#10B981',
     },
     {
       icon: AlertTriangle,
@@ -80,6 +84,8 @@ export default function Dashboard() {
       color: 'amber',
       trend: 'warn',
       trendLabel: '12 require action',
+      sparkData: [5, 7, 8, 9, 10, 11, 12],
+      sparkColor: '#F59E0B',
     },
     {
       icon: Wrench,
@@ -88,6 +94,8 @@ export default function Dashboard() {
       color: 'red',
       trend: 'down',
       trendLabel: '3 overdue',
+      sparkData: [30, 28, 26, 25, 24, 23, 23],
+      sparkColor: '#EF4444',
     },
   ];
 

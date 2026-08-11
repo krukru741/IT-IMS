@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { mockLocations } from '../../data/mockData';
+import toast from 'react-hot-toast';
 import { Building2, MapPin, ChevronRight, ChevronDown, Plus, Edit, Trash2, Layers, Home, GitBranch, DoorOpen } from 'lucide-react';
 
 const TYPE_CONFIG = {
@@ -11,10 +12,11 @@ const TYPE_CONFIG = {
 };
 
 // ── Recursive Tree Node ──────────────────────────────────────────
-function TreeNode({ node, depth = 0 }) {
+function TreeNode({ node, depth = 0, onDragStart, onDrop }) {
   const [expanded, setExpanded] = useState(depth < 2);
   const [editing,  setEditing]  = useState(false);
   const [name,     setName]     = useState(node.name);
+  const [isDragOver, setDragOver] = useState(false);
 
   const cfg     = TYPE_CONFIG[node.type] || TYPE_CONFIG.room;
   const Icon    = cfg.icon;
@@ -24,6 +26,25 @@ function TreeNode({ node, depth = 0 }) {
     <div>
       <div
         className="tree-node"
+        draggable
+        onDragStart={(e) => {
+          e.dataTransfer.setData('nodeId', node.id);
+          e.dataTransfer.setData('nodeLabel', name);
+          e.currentTarget.style.opacity = '0.5';
+          if (onDragStart) onDragStart(node.id);
+        }}
+        onDragEnd={(e) => { e.currentTarget.style.opacity = '1'; }}
+        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setDragOver(false);
+          const draggedId = e.dataTransfer.getData('nodeId');
+          if (draggedId && draggedId !== node.id && onDrop) {
+            onDrop(draggedId, node.id);
+          }
+        }}
         style={{
           paddingLeft: depth * 20 + 12,
           display: 'flex',
@@ -31,12 +52,12 @@ function TreeNode({ node, depth = 0 }) {
           gap: 8,
           padding: `8px 12px 8px ${depth * 20 + 12}px`,
           borderRadius: 'var(--radius-md)',
-          cursor: hasKids ? 'pointer' : 'default',
-          transition: 'background-color var(--transition-fast)',
+          cursor: 'grab',
+          transition: 'background-color var(--transition-fast), box-shadow 0.15s',
           userSelect: 'none',
+          background: isDragOver ? 'rgba(79,70,229,0.12)' : 'transparent',
+          boxShadow: isDragOver ? 'inset 0 0 0 2px rgba(79,70,229,0.5)' : 'none',
         }}
-        onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-sidebar-hover)'}
-        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
         onClick={() => hasKids && setExpanded(s => !s)}
         role={hasKids ? 'button' : undefined}
         aria-expanded={hasKids ? expanded : undefined}
@@ -133,7 +154,7 @@ function TreeNode({ node, depth = 0 }) {
       {hasKids && expanded && (
         <div style={{ borderLeft: `1px dashed var(--border)`, marginLeft: depth * 20 + 22 }}>
           {node.children.map(child => (
-            <TreeNode key={child.id} node={child} depth={depth + 1} />
+            <TreeNode key={child.id} node={child} depth={depth + 1} onDragStart={onDragStart} onDrop={onDrop} />
           ))}
         </div>
       )}
@@ -143,6 +164,11 @@ function TreeNode({ node, depth = 0 }) {
 
 export default function LocationManager() {
   const [search, setSearch] = useState('');
+  const [dragInfo, setDragInfo] = useState(null);
+
+  const handleDrop = (draggedId, targetId) => {
+    toast.success(`Moved node under new parent`, { icon: '📦' });
+  };
 
   // Summary stats
   const countByType = (nodes, type, count = 0) => {
@@ -229,7 +255,7 @@ export default function LocationManager() {
         </div>
         <div style={{ padding: '8px 0' }}>
           {mockLocations.map(node => (
-            <TreeNode key={node.id} node={node} depth={0} />
+            <TreeNode key={node.id} node={node} depth={0} onDragStart={id => setDragInfo(id)} onDrop={handleDrop} />
           ))}
         </div>
       </div>

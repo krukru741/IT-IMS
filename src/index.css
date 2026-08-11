@@ -1296,8 +1296,8 @@ button, input, select, textarea {
   100% { background-position: 200% 0; }
 }
 
-.animate-fade-up { animation: fadeInUp 0.4s ease-out forwards; }
-.animate-fade    { animation: fadeIn 0.3s ease-out forwards; }
+.animate-fade-up { animation: fadeInUp 0.4s ease-out both; }
+.animate-fade    { animation: fadeIn 0.3s ease-out both; }
 
 .stagger-1 { animation-delay: 0ms; }
 .stagger-2 { animation-delay: 60ms; }
@@ -1615,4 +1615,116 @@ button, input, select, textarea {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ── Phase 5: Mobile FAB Scanner ───────────────────────── */
+.fab-mobile {
+  display: none; /* desktop hidden */
+  position: fixed;
+  bottom: 80px; /* above bottom nav */
+  right: 20px;
+  z-index: 600;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4F46E5, #6366F1);
+  border: none;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 24px rgba(79,70,229,0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: fabIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+.fab-mobile:hover {
+  transform: scale(1.08);
+  box-shadow: 0 10px 32px rgba(79,70,229,0.65);
+}
+.fab-mobile:active {
+  transform: scale(0.95);
+}
+@keyframes fabIn {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+@media (max-width: 768px) {
+  .fab-mobile { display: flex; }
+}
+
+/* ── Phase 5: Floating Label Inputs (Login) ────────────── */
+.float-field {
+  position: relative;
+  margin-bottom: 20px;
+}
+.float-field-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: color 0.2s ease;
+  z-index: 1;
+}
+.float-input {
+  width: 100%;
+  height: 52px;
+  padding: 18px 14px 6px 42px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: var(--font-body);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+.float-input:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
+}
+.float-label {
+  position: absolute;
+  left: 42px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+  transform-origin: left center;
+  white-space: nowrap;
+}
+/* Float up when input is focused OR has a value (non-empty placeholder hack) */
+.float-input:focus ~ .float-label,
+.float-input:not(:placeholder-shown) ~ .float-label {
+  top: 10px;
+  transform: translateY(0) scale(0.8);
+  color: var(--brand-primary);
+}
+.float-field:focus-within .float-field-icon {
+  color: var(--brand-primary);
+}
+
+/* ── Phase 5: Avery QR Print Grid Layouts ─────────────── */
+@media print {
+  body > *:not(#qr-label-print-target) {
+    display: none !important;
+  }
+  #qr-label-print-target {
+    display: block !important;
+    position: fixed;
+    top: 0; left: 0;
+    margin: 0; padding: 0;
+  }
+  .qr-print-grid {
+    display: grid;
+    gap: 4px;
+    page-break-inside: avoid;
+  }
+  .qr-print-grid.layout-1  { grid-template-columns: 1fr; }
+  .qr-print-grid.layout-8  { grid-template-columns: repeat(2, 1fr); }
+  .qr-print-grid.layout-16 { grid-template-columns: repeat(4, 1fr); }
+  .qr-print-grid.layout-30 { grid-template-columns: repeat(3, 1fr); }
 }

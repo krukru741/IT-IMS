@@ -63,34 +63,38 @@ export default function Login() {
         <p className="login-subtitle">Sign in to your IT Inventory Management System</p>
 
         <form onSubmit={handleSubmit} noValidate>
-          {/* Email */}
-          <div className="input-group">
-            <Mail className="input-icon" size={16} aria-hidden="true" />
+          {/* Email — floating label */}
+          <div className="float-field">
+            <Mail className="float-field-icon" size={16} aria-hidden="true" />
             <input
               id="email"
               type="email"
-              placeholder="Email address"
+              className="float-input"
+              placeholder=" "
               value={form.email}
               onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
               autoComplete="email"
               required
               aria-label="Email address"
             />
+            <label className="float-label" htmlFor="email">Email address</label>
           </div>
 
-          {/* Password */}
-          <div className="input-group">
-            <Lock className="input-icon" size={16} aria-hidden="true" />
+          {/* Password — floating label */}
+          <div className="float-field">
+            <Lock className="float-field-icon" size={16} aria-hidden="true" />
             <input
               id="password"
               type={showPassword ? 'text' : 'password'}
-              placeholder="Password"
+              className="float-input"
+              placeholder=" "
               value={form.password}
               onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
               autoComplete="current-password"
               aria-label="Password"
               style={{ paddingRight: 44 }}
             />
+            <label className="float-label" htmlFor="password">Password</label>
             <button
               type="button"
               className="input-action"

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import useStore from '../../store/useStore';
-import { Search, Filter, Download } from 'lucide-react';
+import { Search, Filter, Download, Calendar } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
 export default function AuditLogViewer() {
   const { auditLog } = useStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterAction, setFilterAction] = useState('All');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
 
   // Multi-column filtering
   const filteredLogs = auditLog.filter(log => {
@@ -17,8 +19,12 @@ export default function AuditLogViewer() {
       log.details.toLowerCase().includes(searchTerm.toLowerCase());
       
     const matchesAction = filterAction === 'All' || log.action === filterAction;
+
+    const logDate = new Date(log.timestamp);
+    const matchesDateFrom = !dateFrom || logDate >= new Date(dateFrom);
+    const matchesDateTo   = !dateTo   || logDate <= new Date(dateTo + 'T23:59:59');
     
-    return matchesSearch && matchesAction;
+    return matchesSearch && matchesAction && matchesDateFrom && matchesDateTo;
   });
 
   const exportToCSV = () => {
@@ -72,6 +78,31 @@ export default function AuditLogViewer() {
                 <option key={act} value={act}>{act}</option>
               ))}
             </select>
+          </div>
+
+          {/* Date Range */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Calendar size={16} style={{ color: 'var(--text-muted)' }} />
+            <input
+              type="date"
+              className="form-input"
+              style={{ width: 'auto' }}
+              value={dateFrom}
+              onChange={e => setDateFrom(e.target.value)}
+              aria-label="From date"
+            />
+            <span style={{ color: 'var(--text-muted)', fontSize: 13 }}>to</span>
+            <input
+              type="date"
+              className="form-input"
+              style={{ width: 'auto' }}
+              value={dateTo}
+              onChange={e => setDateTo(e.target.value)}
+              aria-label="To date"
+            />
+            {(dateFrom || dateTo) && (
+              <button className="btn btn-ghost btn-sm" onClick={() => { setDateFrom(''); setDateTo(''); }}>Clear</button>
+            )}
           </div>
         </div>
 

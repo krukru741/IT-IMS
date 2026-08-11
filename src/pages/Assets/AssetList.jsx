@@ -4,10 +4,12 @@ import { mockAssets, CATEGORIES } from '../../data/mockData';
 import { StatusBadge } from '../../components/ui/Badge';
 import Avatar from '../../components/ui/Avatar';
 import useStore from '../../store/useStore';
+import toast from 'react-hot-toast';
 import {
   Plus, Search, Filter, LayoutGrid, List,
   Upload, Download, QrCode, ArrowUpDown,
   ChevronLeft, ChevronRight, Laptop, Server, Printer, Monitor, Boxes,
+  UserCheck, Trash2, Archive, X,
 } from 'lucide-react';
 
 const CATEGORY_ICONS = {
@@ -184,23 +186,53 @@ export default function AssetList() {
         </div>
       </div>
 
-      {/* Bulk Actions */}
-      {selected.length > 0 && (
-        <div className="animate-fade-up" style={{
-          display: 'flex', alignItems: 'center', gap: 8,
-          background: 'rgba(79,70,229,0.1)', border: '1px solid rgba(79,70,229,0.3)',
-          borderRadius: 'var(--radius-md)', padding: '8px 16px', marginBottom: 12,
+      {/* Bulk Actions — sticky slide-up bar */}
+      <div style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 500,
+        display: 'flex',
+        justifyContent: 'center',
+        pointerEvents: selected.length > 0 ? 'all' : 'none',
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          background: 'var(--bg-card)',
+          border: '1px solid rgba(79,70,229,0.4)',
+          borderBottom: 'none',
+          borderRadius: '16px 16px 0 0',
+          padding: '12px 24px',
+          boxShadow: '0 -8px 32px rgba(0,0,0,0.25)',
+          transform: selected.length > 0 ? 'translateY(0)' : 'translateY(100%)',
+          transition: 'transform 0.3s cubic-bezier(0.4,0,0.2,1)',
         }}>
-          <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--brand-primary)' }}>
+          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--brand-primary)', paddingRight: 8, borderRight: '1px solid var(--border)' }}>
             {selected.length} selected
           </span>
-          <div style={{ width: 1, height: 16, background: 'var(--border)', margin: '0 4px' }} />
-          <button className="btn btn-ghost btn-sm" id="bulk-assign"><UserCheck size={13} /> Assign</button>
-          <button className="btn btn-ghost btn-sm" id="bulk-qr"><QrCode size={13} /> Print QR</button>
-          <button className="btn btn-ghost btn-sm" id="bulk-export"><Download size={13} /> Export</button>
-          <button className="btn btn-danger btn-sm" id="bulk-delete" style={{ marginLeft: 'auto' }}>Archive</button>
+          <button className="btn btn-ghost btn-sm" id="bulk-assign" onClick={() => toast('Assign flow coming soon')}>
+            <UserCheck size={13} /> Assign
+          </button>
+          <button className="btn btn-ghost btn-sm" id="bulk-qr" onClick={() => toast('Printing QR labels…')}>
+            <QrCode size={13} /> Print QR
+          </button>
+          <button className="btn btn-ghost btn-sm" id="bulk-export" onClick={() => toast.success(`Exporting ${selected.length} assets…`)}>
+            <Download size={13} /> Export
+          </button>
+          <button className="btn btn-ghost btn-sm" id="bulk-archive" onClick={() => { toast.success(`Archived ${selected.length} assets`); setSelected([]); }}>
+            <Archive size={13} /> Archive
+          </button>
+          <button className="btn btn-danger btn-sm" id="bulk-delete" onClick={() => { toast.error(`Deleted ${selected.length} assets`); setSelected([]); }}>
+            <Trash2 size={13} /> Delete
+          </button>
+          <button className="btn btn-ghost btn-icon btn-sm" style={{ marginLeft: 8 }} onClick={() => setSelected([])} aria-label="Clear selection">
+            <X size={14} />
+          </button>
         </div>
-      )}
+      </div>
 
       {/* TABLE VIEW */}
       {view === 'table' && (

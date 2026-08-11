@@ -31,14 +31,63 @@ function SpecItem({ label, value, mono }) {
   );
 }
 
+// ── Warranty Timeline ──────────────────────────────────────────
+function WarrantyTimeline({ purchaseDate, warrantyExpiry }) {
+  const start = new Date(purchaseDate).getTime();
+  const end   = new Date(warrantyExpiry).getTime();
+  const now   = Date.now();
+  const total = end - start;
+  const elapsed = now - start;
+  const todayPct = Math.max(0, Math.min(100, (elapsed / total) * 100));
+  const daysLeft = Math.ceil((end - now) / (1000*60*60*24));
+  const isExpired = daysLeft < 0;
+  const barColor = isExpired ? 'var(--status-danger)' : daysLeft > 365 ? 'var(--status-active)' : 'var(--status-warning)';
+
+  return (
+    <div style={{ marginTop: 20 }}>
+      <div style={{ display:'flex', justifyContent:'space-between', fontSize:12, color:'var(--text-muted)', marginBottom: 8 }}>
+        <span>Warranty Timeline</span>
+        <span style={{ color: barColor, fontWeight: 600 }}>
+          {isExpired ? `Expired ${Math.abs(daysLeft)}d ago` : `${daysLeft} days remaining`}
+        </span>
+      </div>
+      {/* Bar container */}
+      <div style={{ position:'relative', height: 10, background:'var(--bg-input)', borderRadius:'var(--radius-full)', overflow:'visible' }}>
+        {/* Filled bar */}
+        <div style={{
+          height:'100%',
+          width: `${todayPct}%`,
+          background: barColor,
+          borderRadius:'var(--radius-full)',
+          transition:'width 0.6s ease',
+          position:'absolute',
+        }} />
+        {/* Today pin */}
+        <div style={{
+          position:'absolute',
+          left: `${todayPct}%`,
+          top:'50%',
+          transform:'translate(-50%,-50%)',
+          width:14, height:14,
+          background: barColor,
+          border:'2px solid var(--bg-card)',
+          borderRadius:'50%',
+          boxShadow:`0 0 0 2px ${barColor}`,
+          zIndex:2,
+        }} />
+      </div>
+      {/* Labels */}
+      <div style={{ display:'flex', justifyContent:'space-between', fontSize:11, color:'var(--text-disabled)', marginTop:6 }}>
+        <span>{purchaseDate}</span>
+        <span style={{ position:'relative', left:`${Math.min(todayPct, 90)}%`, transform:'translateX(-50%)', color:'var(--text-muted)', fontWeight:500 }}>Today</span>
+        <span>{warrantyExpiry}</span>
+      </div>
+    </div>
+  );
+}
+
 // ── Overview Tab ───────────────────────────────────────────────
 function OverviewTab({ asset }) {
-  const warrantyDays = Math.ceil(
-    (new Date(asset.warrantyExpiry) - new Date()) / (1000 * 60 * 60 * 24)
-  );
-  const warrantyPercent = Math.max(0, Math.min(100,
-    (warrantyDays / (3 * 365)) * 100
-  ));
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -73,27 +122,9 @@ function OverviewTab({ asset }) {
         </div>
 
         {/* Warranty Timeline */}
-        <div style={{ marginTop: 16 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--text-muted)', marginBottom: 6 }}>
-            <span>Warranty Status</span>
-            <span style={{ color: warrantyDays > 0 ? 'var(--status-active)' : 'var(--status-danger)', fontWeight: 600 }}>
-              {warrantyDays > 0 ? `${warrantyDays} days remaining` : 'Expired'}
-            </span>
-          </div>
-          <div style={{ height: 6, background: 'var(--bg-input)', borderRadius: 'var(--radius-full)', overflow: 'hidden' }}>
-            <div style={{
-              height: '100%',
-              width: `${warrantyPercent}%`,
-              background: warrantyDays > 180
-                ? 'var(--status-active)'
-                : warrantyDays > 30
-                  ? 'var(--status-warning)'
-                  : 'var(--status-danger)',
-              borderRadius: 'var(--radius-full)',
-              transition: 'width 0.6s ease',
-            }} />
-          </div>
-        </div>
+        {asset.purchaseDate && asset.warrantyExpiry && (
+          <WarrantyTimeline purchaseDate={asset.purchaseDate} warrantyExpiry={asset.warrantyExpiry} />
+        )}
       </div>
 
       {/* Location */}
