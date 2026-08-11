@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mockAssets, CATEGORIES } from '../../data/mockData';
+import { CATEGORIES } from '../../data/mockData';
 import { StatusBadge } from '../../components/ui/Badge';
 import Avatar from '../../components/ui/Avatar';
 import useStore from '../../store/useStore';
@@ -27,7 +27,7 @@ const STATUS_OPTIONS = ['All', 'ACTIVE', 'IN_REPAIR', 'IN_STORAGE', 'RETIRED'];
 
 export default function AssetList() {
   const navigate = useNavigate();
-  const { activeBranch } = useStore();
+  const { activeBranch, assets } = useStore();
   const [view, setView]           = useState('table');   // 'table' | 'grid'
   const [search, setSearch]       = useState('');
   const [filterStatus, setStatus] = useState('All');
@@ -41,7 +41,7 @@ export default function AssetList() {
 
   // Filter & sort
   const filtered = useMemo(() => {
-    let data = mockAssets;
+    let data = assets;
     if (activeBranch !== 'all') data = data.filter(a => a.branch === activeBranch);
     if (filterStatus !== 'All')   data = data.filter(a => a.status === filterStatus);
     if (filterCategory !== 'All') data = data.filter(a => a.category === filterCategory);
@@ -62,7 +62,7 @@ export default function AssetList() {
       return sortDir === 'asc' ? (va < vb ? -1 : va > vb ? 1 : 0) : (va > vb ? -1 : va < vb ? 1 : 0);
     });
     return data;
-  }, [mockAssets, activeBranch, filterStatus, filterCategory, search, sortKey, sortDir]);
+  }, [assets, activeBranch, filterStatus, filterCategory, search, sortKey, sortDir]);
 
   const totalPages = Math.ceil(filtered.length / pageSize);
   const paged = filtered.slice((page - 1) * pageSize, page * pageSize);

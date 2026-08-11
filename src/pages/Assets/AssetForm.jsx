@@ -9,7 +9,7 @@ import {
 } from '../../schemas/assetSchema';
 import StepWizard from '../../components/ui/StepWizard';
 import useStore, { BRANCHES, generateAssetTag } from '../../store/useStore';
-import { mockUsers, mockAssets } from '../../data/mockData';
+import { mockUsers } from '../../data/mockData';
 import {
   ArrowLeft, ArrowRight, Save, CheckCircle, Plus, Trash2,
   Package, DollarSign, MapPin, Cpu, FileText, Eye,
@@ -389,9 +389,7 @@ export default function AssetForm() {
   const isEdit    = !!id;
   const { addAsset, updateAsset, setDraftAsset, clearDraftAsset, draftAsset, assets } = useStore();
 
-  const existingAsset = isEdit
-    ? (assets.find(a => a.id === id) || mockAssets.find(a => a.id === id))
-    : null;
+  const existingAsset = isEdit ? assets.find(a => a.id === id) : null;
 
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState(() => {
@@ -535,7 +533,7 @@ export default function AssetForm() {
                 className="btn btn-primary"
                 id="submit-asset-btn"
                 onClick={handleSubmit}
-                style={{ background: 'linear-gradient(135deg,#10B981,#34D399)' }}
+                style={{ background: 'var(--status-active)' }}
               >
                 <CheckCircle size={14} />
                 {isEdit ? 'Save Changes' : 'Register Asset'}

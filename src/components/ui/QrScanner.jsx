@@ -99,10 +99,10 @@ export default function QrScanner({ isOpen, onClose, onScan }) {
               }}>
                 {/* Corner brackets */}
                 {[
-                  { top: 0,    left: 0,    borderTop: '3px solid #4F46E5', borderLeft: '3px solid #4F46E5' },
-                  { top: 0,    right: 0,   borderTop: '3px solid #4F46E5', borderRight: '3px solid #4F46E5' },
-                  { bottom: 0, left: 0,    borderBottom: '3px solid #4F46E5', borderLeft: '3px solid #4F46E5' },
-                  { bottom: 0, right: 0,   borderBottom: '3px solid #4F46E5', borderRight: '3px solid #4F46E5' },
+                  { top: 0,    left: 0,    borderTop: '3px solid var(--brand-primary)', borderLeft: '3px solid var(--brand-primary)' },
+                  { top: 0,    right: 0,   borderTop: '3px solid var(--brand-primary)', borderRight: '3px solid var(--brand-primary)' },
+                  { bottom: 0, left: 0,    borderBottom: '3px solid var(--brand-primary)', borderLeft: '3px solid var(--brand-primary)' },
+                  { bottom: 0, right: 0,   borderBottom: '3px solid var(--brand-primary)', borderRight: '3px solid var(--brand-primary)' },
                 ].map((style, i) => (
                   <div key={i} style={{
                     position: 'absolute', width: 28, height: 28, ...style,
@@ -112,7 +112,7 @@ export default function QrScanner({ isOpen, onClose, onScan }) {
                 <div style={{
                   position: 'absolute', left: 0, right: 0, top: '50%',
                   height: 2,
-                  background: 'linear-gradient(90deg, transparent, #4F46E5, transparent)',
+                  background: 'linear-gradient(90deg, transparent, var(--brand-primary), transparent)',
                   animation: 'scanline 1.8s ease-in-out infinite',
                 }} />
               </div>
@@ -139,7 +139,7 @@ export default function QrScanner({ isOpen, onClose, onScan }) {
               position: 'absolute', inset: 0,
               display: 'flex', flexDirection: 'column',
               alignItems: 'center', justifyContent: 'center', gap: 12,
-              background: '#0f172a',
+              background: 'var(--bg-surface)',
               padding: 24, textAlign: 'center',
             }}>
               <CameraOff size={36} style={{ color: 'var(--status-danger)' }} />
