@@ -3,6 +3,9 @@ import { X } from 'lucide-react';
 
 export default function Modal({ isOpen, onClose, title, children, size = 'md', id }) {
   const overlayRef = useRef(null);
+  const contentRef = useRef(null);
+  const closeBtnRef = useRef(null);
+  const triggerRef = useRef(null);
 
   // Close on Escape
   useEffect(() => {
@@ -15,11 +18,32 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md', i
   // Trap focus & prevent body scroll
   useEffect(() => {
     if (isOpen) {
+      triggerRef.current = document.activeElement;
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
+      // Move focus into the modal
+      requestAnimationFrame(() => closeBtnRef.current?.focus());
+
+      const trapFocus = (e) => {
+        if (e.key !== 'Tab' || !contentRef.current) return;
+        const focusable = contentRef.current.querySelectorAll(
+          'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault(); last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault(); first.focus();
+        }
+      };
+      window.addEventListener('keydown', trapFocus);
+      return () => {
+        document.body.style.overflow = '';
+        window.removeEventListener('keydown', trapFocus);
+        triggerRef.current?.focus();
+      };
     }
-    return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -46,6 +70,7 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md', i
     >
       <div
         className="modal-content"
+        ref={contentRef}
         style={{
           background: 'var(--bg-card)',
           border: '1px solid var(--border)',
@@ -59,7 +84,6 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md', i
           animation: 'modalIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
         }}
       >
-        {/* Header */}
         {title && (
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -74,6 +98,7 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md', i
               {title}
             </h2>
             <button
+              ref={closeBtnRef}
               className="btn btn-ghost btn-icon"
               onClick={onClose}
               aria-label="Close modal"
@@ -84,7 +109,6 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md', i
           </div>
         )}
 
-        {/* Body */}
         <div style={{ overflow: 'auto', flex: 1, padding: '0' }}>
           {children}
         </div>
@@ -94,6 +118,19 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md', i
         @keyframes modalIn {
           from { opacity: 0; transform: scale(0.95) translateY(8px); }
           to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @media (max-width: 480px) {
+          .modal-overlay { padding: 12px !important; align-items: flex-end !important; }
+          .modal-content {
+            max-width: 100% !important;
+            max-height: 85vh !important;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
+            animation: modalInMobile 0.25s ease-out !important;
+          }
+        }
+        @keyframes modalInMobile {
+          from { opacity: 0; transform: translateY(24px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </div>

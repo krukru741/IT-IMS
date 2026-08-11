@@ -14,7 +14,9 @@ export function Badge({ variant = 'neutral', children, dot = false }) {
 }
 
 /**
- * Status badge from asset status key
+ * Status badge from asset status key.
+ * Falls back to a neutral "Unknown" badge for unrecognized values,
+ * instead of silently rendering as "Active".
  */
 export function StatusBadge({ status }) {
   const map = {
@@ -24,7 +26,7 @@ export function StatusBadge({ status }) {
     RETIRED:    { variant: 'danger',  label: 'Retired',     dot: false },
     DISPOSED:   { variant: 'neutral', label: 'Disposed',    dot: false },
   };
-  const cfg = map[status] || map['ACTIVE'];
+  const cfg = map[status] || { variant: 'neutral', label: status || 'Unknown', dot: false };
   return <Badge variant={cfg.variant} dot={cfg.dot}>{cfg.label}</Badge>;
 }
 

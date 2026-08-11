@@ -12,10 +12,10 @@ export default function ProcurementQueue() {
 
   const getStatusIcon = (status) => {
     switch(status) {
-      case 'Submitted': return <Clock size={14} style={{ color: 'var(--accent-amber)' }} />;
-      case 'Dept Approved': return <CheckCircle size={14} style={{ color: 'var(--accent-blue)' }} />;
+      case 'Submitted': return <Clock size={14} style={{ color: 'var(--status-warning)' }} />;
+      case 'Dept Approved': return <CheckCircle size={14} style={{ color: 'var(--status-info)' }} />;
       case 'PO Created': return <ShoppingCart size={14} style={{ color: 'var(--brand-primary)' }} />;
-      case 'Fulfilled': return <CheckCircle size={14} style={{ color: 'var(--accent-green)' }} />;
+      case 'Fulfilled': return <CheckCircle size={14} style={{ color: 'var(--status-active)' }} />;
       default: return <AlertCircle size={14} />;
     }
   };
@@ -23,14 +23,14 @@ export default function ProcurementQueue() {
   const getStatusBadge = (status) => {
     let bg = 'var(--border)';
     let color = 'var(--text-primary)';
-    
-    if (status === 'Submitted') { bg = 'rgba(245,158,11,0.1)'; color = 'var(--accent-amber)'; }
-    if (status === 'Dept Approved') { bg = 'rgba(59,130,246,0.1)'; color = 'var(--accent-blue)'; }
-    if (status === 'PO Created') { bg = 'rgba(79,70,229,0.1)'; color = 'var(--brand-primary)'; }
-    if (status === 'Fulfilled') { bg = 'rgba(16,185,129,0.1)'; color = 'var(--accent-green)'; }
+
+    if (status === 'Submitted')     { bg = 'var(--status-warning-bg)'; color = 'var(--status-warning)'; }
+    if (status === 'Dept Approved') { bg = 'var(--status-info-bg)';    color = 'var(--status-info)'; }
+    if (status === 'PO Created')    { bg = 'rgba(79,70,229,0.1)';      color = 'var(--brand-primary)'; }
+    if (status === 'Fulfilled')     { bg = 'var(--status-active-bg)';  color = 'var(--status-active)'; }
 
     return (
-      <span style={{ 
+      <span style={{
         display: 'inline-flex', alignItems: 'center', gap: 6,
         background: bg, color, padding: '4px 10px', borderRadius: 999, fontSize: 12, fontWeight: 500
       }}>

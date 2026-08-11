@@ -83,6 +83,9 @@
   --status-info:      #3B82F6;
   --status-neutral:   #64748B;
   --status-purple:    #8B5CF6;
+  --accent-green:     var(--status-active);
+  --accent-blue:      var(--status-info);
+  --accent-amber:     var(--status-warning);
 
   /* Status backgrounds */
   --status-active-bg:   rgba(16, 185, 129, 0.12);
@@ -1413,17 +1416,23 @@ button, input, select, textarea {
   .sidebar .nav-badge,
   .sidebar .sidebar-section-label,
   .sidebar .user-info { opacity: 0; pointer-events: none; }
+  /* Keep main-content margin in sync with the forced-collapsed width */
   .main-content { margin-left: var(--sidebar-collapsed-width); }
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }
   .dashboard-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 767px) {
-  .sidebar { display: none; }
+  /* Sidebar becomes the bottom tab bar below — do NOT set display:none here */
   .main-content { margin-left: 0; }
   .page-content { padding: var(--space-4); }
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }
   .navbar-search { display: none; }
+}
+
+@media (max-width: 380px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+  .kpi-value { font-size: 26px; }
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -1444,6 +1453,7 @@ button, input, select, textarea {
   }
   
   .sidebar {
+    display: flex;
     width: 100% !important;
     height: 60px;
     flex-direction: row;
@@ -1648,7 +1658,7 @@ button, input, select, textarea {
   to   { transform: scale(1); opacity: 1; }
 }
 @media (max-width: 768px) {
-  .fab-mobile { display: flex; }
+  .fab-mobile { display: flex; bottom: 76px; }
 }
 
 /* ── Phase 5: Floating Label Inputs (Login) ────────────── */
