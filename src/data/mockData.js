@@ -429,3 +429,52 @@ export const mockWorkOrders = [
     dueDate: '2026-08-05',
   }
 ];
+
+export const mockRequisitions = [
+  {
+    id: 'req-001',
+    item: 'MacBook Pro 16" M3',
+    department: 'Design',
+    requestedBy: 'Sarah Lee',
+    date: '2026-08-01',
+    status: 'Submitted',
+    priority: 'Medium',
+    estimatedCost: 2499.00,
+    vendor: 'Apple Business',
+  },
+  {
+    id: 'req-002',
+    item: 'Cisco Meraki MR46',
+    department: 'IT',
+    requestedBy: 'Alex Reyes',
+    date: '2026-08-05',
+    status: 'Dept Approved',
+    priority: 'High',
+    estimatedCost: 899.00,
+    vendor: 'CDW',
+  },
+  {
+    id: 'req-003',
+    item: 'ErgoChair Pro',
+    department: 'HR',
+    requestedBy: 'Mike Tan',
+    date: '2026-07-28',
+    status: 'PO Created',
+    poNumber: 'PO-2026-089',
+    priority: 'Low',
+    estimatedCost: 499.00,
+    vendor: 'Autonomous',
+  },
+  {
+    id: 'req-004',
+    item: 'Dell UltraSharp 32"',
+    department: 'Engineering',
+    requestedBy: 'John Doe',
+    date: '2026-07-20',
+    status: 'Fulfilled',
+    poNumber: 'PO-2026-077',
+    priority: 'Medium',
+    estimatedCost: 850.00,
+    vendor: 'Dell Technologies',
+  },
+];
