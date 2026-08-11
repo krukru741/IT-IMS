@@ -14,6 +14,7 @@ import LicenseList from './pages/Licenses/LicenseList';
 import MaintenanceList from './pages/Maintenance/MaintenanceList';
 import ReportDashboard from './pages/Reports/ReportDashboard';
 import ProcurementQueue from './pages/Procurement/ProcurementQueue';
+import AuditLogViewer from './pages/Settings/AuditLogViewer';
 import SyncManager from './components/layout/SyncManager';
 
 // Placeholder for Phase 3+ modules
@@ -65,7 +66,7 @@ export default function App() {
         <Route path="/maintenance" element={<Layout><MaintenanceList /></Layout>} />
         <Route path="/reports"     element={<Layout><ReportDashboard /></Layout>} />
         <Route path="/procurement" element={<Layout><ProcurementQueue /></Layout>} />
-        <Route path="/settings"    element={<Layout><Placeholder title="Settings" /></Layout>} />
+        <Route path="/settings"    element={<Layout><AuditLogViewer /></Layout>} />
         <Route path="/notifications" element={<Layout><Placeholder title="Notifications" /></Layout>} />
 
         {/* Fallback */}

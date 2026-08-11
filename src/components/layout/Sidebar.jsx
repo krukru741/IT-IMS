@@ -1,5 +1,5 @@
 import React from 'react';
-import useStore from '../../store/useStore';
+import useStore, { PERMISSIONS } from '../../store/useStore';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Package, Users, Wrench, MapPin,
@@ -10,15 +10,15 @@ import {
 const NAV_ITEMS = [
   { label: 'Dashboard',    icon: LayoutDashboard, path: '/',          section: 'main' },
   { label: 'Assets',       icon: Package,         path: '/assets',    section: 'main', badge: null },
-  { label: 'Users',        icon: Users,           path: '/users',     section: 'main' },
+  { label: 'Users',        icon: Users,           path: '/users',     section: 'main', permission: PERMISSIONS.CAN_MANAGE_USERS },
   { label: 'Maintenance',  icon: Wrench,          path: '/maintenance',section: 'main' },
   { label: 'Locations',    icon: MapPin,          path: '/locations', section: 'main' },
-  { label: 'Reports',      icon: BarChart3,       path: '/reports',   section: 'main' },
-  { label: 'Procurement',  icon: ShoppingCart,    path: '/procurement',section: 'main' },
+  { label: 'Reports',      icon: BarChart3,       path: '/reports',   section: 'main', permission: PERMISSIONS.CAN_VIEW_REPORTS },
+  { label: 'Procurement',  icon: ShoppingCart,    path: '/procurement',section: 'main', permission: PERMISSIONS.CAN_APPROVE_PO },
 ];
 
 const BOTTOM_ITEMS = [
-  { label: 'Settings',     icon: Settings,        path: '/settings',  section: 'bottom' },
+  { label: 'Settings',     icon: Settings,        path: '/settings',  section: 'bottom', permission: PERMISSIONS.CAN_VIEW_SETTINGS },
   { label: 'Notifications',icon: Bell,            path: '/notifications', section: 'bottom', badgeKey: 'notification' },
 ];
 
@@ -74,11 +74,17 @@ export default function Sidebar() {
       {/* Main Nav */}
       <nav className="sidebar-nav">
         <div className="sidebar-section-label">Main Menu</div>
-        {NAV_ITEMS.map(item => <NavItem key={item.path} item={item} />)}
+        {NAV_ITEMS.map(item => {
+          if (item.permission && !useStore.getState().hasPermission(item.permission)) return null;
+          return <NavItem key={item.path} item={item} />;
+        })}
 
         <div className="divider" style={{ margin: '12px 8px' }} />
         <div className="sidebar-section-label">System</div>
-        {BOTTOM_ITEMS.map(item => <NavItem key={item.path} item={item} />)}
+        {BOTTOM_ITEMS.map(item => {
+          if (item.permission && !useStore.getState().hasPermission(item.permission)) return null;
+          return <NavItem key={item.path} item={item} />;
+        })}
       </nav>
 
       {/* User Footer */}

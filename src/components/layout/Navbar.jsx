@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import useStore, { BRANCHES } from '../../store/useStore';
+import useStore, { BRANCHES, PERMISSIONS } from '../../store/useStore';
 import { Search, Sun, Moon, Bell, MapPin, Wifi, WifiOff, RefreshCw, ScanLine, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import QrScanner from '../ui/QrScanner';
@@ -13,6 +13,7 @@ export default function Navbar() {
     notificationCount,
     syncStatus,
     currentUser,
+    hasPermission,
   } = useStore();
 
   const handleScan = (url) => {
@@ -108,14 +109,16 @@ export default function Navbar() {
         </button>
 
         {/* Add Asset shortcut */}
-        <button
-          id="quick-add-asset-btn"
-          className="btn btn-primary btn-sm"
-          onClick={() => navigate('/assets/new')}
-          aria-label="Add new asset"
-        >
-          <Plus size={14} /> Add Asset
-        </button>
+        {hasPermission(PERMISSIONS.CAN_ADD_ASSET) && (
+          <button
+            id="quick-add-asset-btn"
+            className="btn btn-primary btn-sm"
+            onClick={() => navigate('/assets/new')}
+            aria-label="Add new asset"
+          >
+            <Plus size={14} /> Add Asset
+          </button>
+        )}
 
         {/* Notifications */}
         <button

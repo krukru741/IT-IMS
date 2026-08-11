@@ -2,6 +2,7 @@ import React from 'react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import SyncManager from './SyncManager';
+import RoleSwitcher from './RoleSwitcher';
 import useStore from '../../store/useStore';
 
 export default function Layout({ children }) {
@@ -17,6 +18,7 @@ export default function Layout({ children }) {
         </main>
       </div>
       <SyncManager />
+      <RoleSwitcher />
     </div>
   );
 }

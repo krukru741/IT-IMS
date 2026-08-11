@@ -1437,6 +1437,84 @@ button, input, select, textarea {
   }
 }
 
+/* ── Phase 4: Responsive Mobile & PWA Polish ────────────────── */
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100% !important;
+    height: 60px;
+    flex-direction: row;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    border-right: none;
+    border-top: 1px solid var(--border);
+    padding: 0;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .sidebar-brand,
+  .sidebar-section-label,
+  .divider,
+  .sidebar-footer {
+    display: none !important;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    padding: 0;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+    gap: 0;
+  }
+
+  .nav-item {
+    flex-direction: column;
+    padding: 8px 4px;
+    border-radius: 0;
+    margin: 0;
+    justify-content: center;
+    gap: 4px;
+    flex: 1;
+  }
+  
+  .nav-item:hover {
+    background: transparent;
+  }
+
+  .nav-item-label {
+    font-size: 10px;
+    text-align: center;
+    display: block !important;
+    opacity: 1 !important;
+    width: auto !important;
+  }
+
+  .main-content {
+    padding-bottom: 70px; /* Space for bottom nav */
+  }
+
+  /* Increase touch targets for mobile */
+  .btn, .nav-item, input, select, button {
+    min-height: 44px;
+  }
+  
+  .grid-4, .grid-3, .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+}
 /* =============================================================
    PHASE 2 — Additional Component Styles
    ============================================================= */
