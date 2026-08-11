@@ -98,6 +98,19 @@ export default function Sidebar() {
             <div className="user-name">{currentUser.name}</div>
             <div className="user-role">{currentUser.role}</div>
           </div>
+          {!sidebarCollapsed && (
+            <button
+              className="btn btn-ghost btn-icon btn-sm"
+              onClick={(e) => { e.stopPropagation(); navigate('/login'); }}
+              aria-label="Log out"
+              title="Log out"
+              style={{ padding: 4, height: 28, width: 28, flexShrink: 0, color: 'var(--text-muted)' }}
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+            >
+              <LogOut size={16} />
+            </button>
+          )}
         </div>
 
         {/* Collapse toggle */}
