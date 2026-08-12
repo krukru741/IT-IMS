@@ -1,22 +1,29 @@
 import React, { useState } from 'react';
-import { Mail, Lock, Eye, EyeOff, Boxes, AlertCircle } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Boxes, AlertCircle, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import useStore from '../store/useStore';
+import { mockUsers } from '../data/mockData';
 import { Sun, Moon } from 'lucide-react';
+
+// ── Demo-only credential gate ─────────────────────────────────
+// There is no backend yet, so we validate against the mock user
+// directory. Every seeded account shares this password. Replace
+// this entire block with a real API call once auth is available.
+const DEMO_PASSWORD = 'demo1234';
 
 // Static — defined once, not recreated every render
 const BLOBS = [
-  { size: 300, top: 10, left: 20, delay: 0 },
-  { size: 380, top: 60, left: 70, delay: 1 },
-  { size: 460, top: 30, left: 80, delay: 2 },
-  { size: 540, top: 80, left: 10, delay: 3 },
-  { size: 620, top: 5, left: 50, delay: 4 },
-  { size: 700, top: 50, left: 35, delay: 5 },
+  { size: 300, top: 10, left: 20 },
+  { size: 380, top: 60, left: 70 },
+  { size: 460, top: 30, left: 80 },
+  { size: 540, top: 80, left: 10 },
+  { size: 620, top: 5, left: 50 },
+  { size: 700, top: 50, left: 35 },
 ];
 
 export default function Login() {
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useStore();
+  const { theme, toggleTheme, setCurrentUser, setActiveBranch } = useStore();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -27,6 +34,24 @@ export default function Login() {
   });
 
   const isValid = form.email.trim().length > 3 && form.password.length > 0;
+
+  // ── Credential lookup against mock directory ─────────────────
+  const authenticate = (email, password) => {
+    const user = mockUsers.find(
+      u => u.email.toLowerCase() === email.trim().toLowerCase()
+    );
+
+    if (!user) {
+      return { ok: false, message: 'No account found with that email address.' };
+    }
+    if (user.status !== 'active') {
+      return { ok: false, message: 'This account is inactive. Contact your administrator.' };
+    }
+    if (password !== DEMO_PASSWORD) {
+      return { ok: false, message: 'Incorrect password. Please try again.' };
+    }
+    return { ok: true, user };
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,8 +67,30 @@ export default function Login() {
     }
 
     setLoading(true);
-    await new Promise(r => setTimeout(r, 900));
+    // Simulate auth network delay
+    await new Promise(r => setTimeout(r, 700));
+
+    const result = authenticate(form.email, form.password);
     setLoading(false);
+
+    if (!result.ok) {
+      setError(result.message);
+      return;
+    }
+
+    const { user } = result;
+
+    // Hydrate the store with the authenticated user
+    setCurrentUser({
+      id: user.id,
+      name: user.name,
+      initials: user.initials,
+      email: user.email,
+      role: user.role,
+      branch: user.branch,
+      avatar: null,
+    });
+    setActiveBranch(user.branch || 'all');
 
     if (remember) localStorage.setItem('ims-remember-email', form.email);
     else localStorage.removeItem('ims-remember-email');
@@ -175,7 +222,22 @@ export default function Login() {
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: 24, fontSize: 12, color: 'var(--text-muted)' }}>
+        {/* Demo credentials hint — remove once real auth is wired */}
+        <div style={{
+          display: 'flex', gap: 8, alignItems: 'flex-start',
+          marginTop: 20, padding: '10px 14px',
+          background: 'rgba(79,70,229,0.06)', border: '1px solid rgba(79,70,229,0.15)',
+          borderRadius: 'var(--radius-md)', fontSize: 12, color: 'var(--text-muted)',
+        }}>
+          <Info size={14} style={{ flexShrink: 0, marginTop: 1, color: 'var(--brand-primary)' }} />
+          <span>
+            Demo mode: sign in with any active user's email from the directory
+            (e.g. <strong style={{ color: 'var(--text-secondary)' }}>alex.reyes@company.com</strong>)
+            and password <strong style={{ color: 'var(--text-secondary)' }}>{DEMO_PASSWORD}</strong>.
+          </span>
+        </div>
+
+        <div style={{ textAlign: 'center', marginTop: 20, fontSize: 12, color: 'var(--text-muted)' }}>
           IT IMS v1.0.0 &nbsp;·&nbsp; <a href="#">Support</a>
         </div>
       </div>
