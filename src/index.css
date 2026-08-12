@@ -1716,6 +1716,24 @@ button, input, select, textarea {
 .float-field:focus-within .float-field-icon {
   color: var(--brand-primary);
 }
+.float-field .input-action {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease;
+  z-index: 2;
+}
+.float-field .input-action:hover {
+  color: var(--text-primary);
+}
 
 /* ── Phase 5: Avery QR Print Grid Layouts ─────────────── */
 @media print {
